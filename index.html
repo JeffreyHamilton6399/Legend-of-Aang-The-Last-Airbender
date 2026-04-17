@@ -426,6 +426,7 @@
               </button>
               <input type="range" id="volSlider" class="vol-slider" min="0" max="1" step="0.02" value="1" aria-label="Volume">
             </div>
+            <button class="cbtn" id="ccBtn" aria-label="Toggle captions" style="font-family:'Cinzel',serif;font-size:0.55rem;font-weight:700;letter-spacing:0.05em;border-radius:4px;">CC</button>
             <button class="cbtn" id="fsBtn" aria-label="Toggle fullscreen">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
             </button>
@@ -728,6 +729,31 @@ updateVolUI();
 
 /* ── Fullscreen button ── */
 document.getElementById('fsBtn').addEventListener('click', toggleFullscreen);
+
+/* ── Captions button ── */
+const ccBtn = document.getElementById('ccBtn');
+let captionsOn = false;
+
+function updateCCUI() {
+  ccBtn.style.color = captionsOn ? 'var(--blue)' : 'rgba(255,255,255,0.6)';
+  ccBtn.style.border = captionsOn ? '1px solid var(--blue)' : '1px solid transparent';
+  for (const track of vid.textTracks) {
+    track.mode = captionsOn ? 'showing' : 'hidden';
+  }
+}
+
+ccBtn.addEventListener('click', () => {
+  captionsOn = !captionsOn;
+  updateCCUI();
+});
+
+vid.addEventListener('loadedmetadata', () => {
+  for (const track of vid.textTracks) {
+    track.mode = 'hidden';
+  }
+});
+
+updateCCUI();
 </script>
 </body>
 </html>
