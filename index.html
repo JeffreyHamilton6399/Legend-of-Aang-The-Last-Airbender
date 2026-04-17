@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Legend Of Aang</title>
-  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/JeffreyHamilton6399/Legend-of-Aang-The-Last-Airbender/main/air.png">
+  <link rel="icon" type="image/jpeg" href="favicon.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Cinzel+Decorative:wght@400;700;900&family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
   <style>
@@ -446,13 +446,27 @@
 
 <script>
 /* ══════════════════════════════════════════════
-   Intro audio — try autoplay immediately.
-   Browsers may block it silently; that's fine.
+   Intro audio — try immediately, fall back to
+   first real user gesture if browser blocks it.
 ══════════════════════════════════════════════ */
 const sfx = new Audio('intro.mp3');
 sfx.preload = 'auto';
 sfx.volume  = 1.0;
-sfx.play().catch(() => {/* autoplay blocked — no action needed */});
+
+let audioStarted = false;
+function startAudio() {
+  if (audioStarted) return;
+  audioStarted = true;
+  sfx.play().catch(() => {});
+}
+
+// Try right away (works if browser permits autoplay)
+startAudio();
+
+// Fallback: fire on first real interaction if blocked
+['click', 'touchstart', 'keydown', 'pointerdown'].forEach(evt =>
+  document.addEventListener(evt, startAudio, { once: true, capture: true })
+);
 
 function stopIntroAudio() {
   const fadeStep = 0.05;
