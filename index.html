@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Legend of Aang: The Last Airbender</title>
+  <title>Legend Of Aang</title>
+  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/JeffreyHamilton6399/Legend-of-Aang-The-Last-Airbender/main/air.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
   <style>
@@ -337,7 +338,7 @@
 <body>
 
 <!-- ── Intro overlay ── -->
-<div id="introOverlay">
+<div id="introOverlay" style="cursor:pointer;" title="Click to enter">
   <p class="intro-tagline">Four elements. One destiny.</p>
   <div class="symbols-grid">
     <div class="sym-item water">
@@ -357,6 +358,7 @@
       <span class="sym-label">Air</span>
     </div>
   </div>
+  <p style="font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.35em;text-transform:uppercase;color:rgba(200,180,120,0.35);margin-top:1rem;opacity:0;transition:opacity 0.6s ease 0.8s;" id="enterHint">Click anywhere to enter</p>
 </div>
 
 <!-- ── Background ── -->
@@ -444,21 +446,20 @@
 <script>
 /* ══════════════════════════════════════════════
    Intro audio
-   - Loads from GitHub raw URL so it works when
-     hosted on GitHub Pages alongside the HTML.
-   - Muted-first trick: browser allows muted autoplay,
-     then we unmute immediately in the same JS tick.
-   - Fades out and stops when the overlay dismisses.
+   Browsers block audio autoplay without a user gesture.
+   We play on the first interaction (click/touch/key),
+   which is almost always before or as the overlay fades.
+   The overlay is also clickable to dismiss early + start audio.
 ══════════════════════════════════════════════ */
 const sfx = new Audio('intro.mp3');
 sfx.preload = 'auto';
 sfx.volume  = 1.0;
-sfx.muted   = true;
 
-function playIntroAudio() {
-  sfx.play().then(() => {
-    sfx.muted = false;
-  }).catch(() => {/* silently ignore if browser still blocks */});
+let audioStarted = false;
+function startAudio() {
+  if (audioStarted) return;
+  audioStarted = true;
+  sfx.play().catch(() => {});
 }
 
 function stopIntroAudio() {
@@ -475,34 +476,41 @@ function stopIntroAudio() {
   }, 40);
 }
 
-// Attempt autoplay immediately; fall back to first user interaction
-sfx.play().then(() => {
-  sfx.muted = false;
-}).catch(() => {
-  sfx.muted = false;
-  const unlock = () => { playIntroAudio(); };
-  ['click', 'touchstart', 'pointerdown'].forEach(evt =>
-    document.addEventListener(evt, unlock, { once: true, capture: true })
-  );
-});
+// Play on any first interaction with the page
+['click', 'touchstart', 'keydown', 'pointerdown'].forEach(evt =>
+  document.addEventListener(evt, startAudio, { once: true, capture: true })
+);
 
 /* ══════════════════════════════════════════════
    Intro overlay sequence
 ══════════════════════════════════════════════ */
 const overlay = document.getElementById('introOverlay');
 
+const enterHint = document.getElementById('enterHint');
+
 requestAnimationFrame(() => {
-  setTimeout(() => overlay.classList.add('symbols-in'), 80);
+  setTimeout(() => {
+    overlay.classList.add('symbols-in');
+    // Fade in the "click to enter" hint shortly after symbols appear
+    setTimeout(() => { enterHint.style.opacity = '1'; }, 600);
+  }, 80);
 });
 
-setTimeout(() => {
+function dismissOverlay() {
+  if (overlay.classList.contains('fade-out')) return;
   overlay.classList.add('fade-out');
   stopIntroAudio();
   setTimeout(() => {
     overlay.style.display = 'none';
     document.body.classList.add('page-ready');
   }, 650);
-}, 2400);
+}
+
+// Auto-dismiss after 2.4s
+setTimeout(dismissOverlay, 2400);
+
+// Also dismiss immediately on click
+overlay.addEventListener('click', dismissOverlay);
 
 /* ══════════════════════════════════════════════
    Video player
