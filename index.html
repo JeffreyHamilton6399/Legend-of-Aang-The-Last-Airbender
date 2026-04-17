@@ -786,49 +786,54 @@
 
 <script>
 /* ══════════════════════════════════════════════
-   Intro audio — Web Audio API unlock for instant
-   playback on first gesture; no perceptible delay.
+   Intro audio — created only on first gesture
+   to guarantee browser autoplay policy is met.
 ══════════════════════════════════════════════ */
-const sfx = new Audio('intro.mp3');
-sfx.preload = 'auto';
-sfx.volume  = 1.0;
-
-// Pre-fetch + decode into AudioContext so buffer is warm
-// and plays with zero latency on the first user gesture.
 let _actx = null;
 let _sfxBuf = null;
 let _gainNode = null;
 let audioStarted = false;
+let audioReady = false;
 
-(function warmAudio() {
-  try {
-    _actx = new (window.AudioContext || window.webkitAudioContext)();
-    fetch('intro.mp3')
-      .then(r => r.arrayBuffer())
-      .then(ab => _actx.decodeAudioData(ab))
-      .then(buf => { _sfxBuf = buf; })
-      .catch(() => {});
-  } catch(e) {}
-})();
+// Pre-fetch MP3 as ArrayBuffer so it's warm in memory,
+// but DON'T create AudioContext until a user gesture.
+fetch('intro.mp3')
+  .then(r => r.arrayBuffer())
+  .then(ab => { _sfxBuf = ab; audioReady = true; })
+  .catch(() => {});
 
 function startAudio() {
   if (audioStarted) return;
   audioStarted = true;
-  // If buffer is decoded, play via Web Audio (instant, no buffering delay)
-  if (_actx && _sfxBuf) {
-    _actx.resume().then(() => {
-      _gainNode = _actx.createGain();
-      _gainNode.gain.setValueAtTime(1, _actx.currentTime);
-      _gainNode.connect(_actx.destination);
-      const src = _actx.createBufferSource();
-      src.buffer = _sfxBuf;
-      src.connect(_gainNode);
-      src.start(0);
-    });
-  } else {
-    // Fallback to HTMLAudio
-    sfx.play().catch(() => {});
-  }
+  try {
+    _actx = new (window.AudioContext || window.webkitAudioContext)();
+    const playBuffer = (buf) => {
+      _actx.resume().then(() => {
+        _gainNode = _actx.createGain();
+        _gainNode.gain.setValueAtTime(1, _actx.currentTime);
+        _gainNode.connect(_actx.destination);
+        const src = _actx.createBufferSource();
+        src.buffer = buf;
+        src.connect(_gainNode);
+        src.start(0);
+      });
+    };
+    if (audioReady && _sfxBuf) {
+      _actx.decodeAudioData(_sfxBuf.slice(0)).then(playBuffer).catch(() => {});
+    } else {
+      // Buffer not fetched yet — poll briefly then play
+      let attempts = 0;
+      const poll = setInterval(() => {
+        attempts++;
+        if (_sfxBuf) {
+          clearInterval(poll);
+          _actx.decodeAudioData(_sfxBuf.slice(0)).then(playBuffer).catch(() => {});
+        } else if (attempts > 20) {
+          clearInterval(poll);
+        }
+      }, 100);
+    }
+  } catch(e) {}
 }
 
 // Fallback: fire on first real interaction if blocked
@@ -837,7 +842,6 @@ function startAudio() {
 );
 
 function stopIntroAudio() {
-  // Fade via gain node if Web Audio was used
   if (_actx && _gainNode && _actx.state === 'running') {
     try {
       _gainNode.gain.setValueAtTime(_gainNode.gain.value, _actx.currentTime);
@@ -845,18 +849,6 @@ function stopIntroAudio() {
       setTimeout(() => { try { _actx.close(); } catch(e) {} }, 450);
     } catch(e) {}
   }
-  // Also fade HTMLAudio fallback (no-op if not playing)
-  const fadeStep = 0.05;
-  const fade = setInterval(() => {
-    if (sfx.volume > fadeStep) {
-      sfx.volume -= fadeStep;
-    } else {
-      sfx.pause();
-      sfx.currentTime = 0;
-      sfx.volume = 1.0;
-      clearInterval(fade);
-    }
-  }, 40);
 }
 
 /* ══════════════════════════════════════════════
@@ -1245,5 +1237,6 @@ vid.addEventListener('loadedmetadata', () => {
   els.forEach(el => io.observe(el));
 })();
 
-
+</script>
+</body>
 </html>
