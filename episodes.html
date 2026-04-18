@@ -524,15 +524,15 @@ const NEXT_EP_BEFORE_END    = 30;   // seconds before end to show Next Episode p
 const AUTO_PLAY_SECS        = 10;   // countdown seconds on ended
 
 const BOOKS = [
-  { book:1, tag:'atla-book1', label:'Book One', sublabel:'Water', symFile:'water.png',
+  { book:1, tag:'season1', label:'Book One', sublabel:'Water', symFile:'water.png',
     episodes:['The Boy in the Iceberg','The Avatar Returns','The Southern Air Temple','The Warriors of Kyoshi','The King of Omashu','Imprisoned','The Spirit World','Avatar Roku','The Waterbending Scroll','Jet','The Great Divide','The Storm','The Blue Spirit','The Fortuneteller',"Bato of the Water Tribe",'The Deserter','The Northern Air Temple','The Waterbending Master','The Siege of the North, Part 1','The Siege of the North, Part 2'] },
-  { book:2, tag:'atla-book2', label:'Book Two', sublabel:'Earth', symFile:'earth.png',
+  { book:2, tag:'season2', label:'Book Two', sublabel:'Earth', symFile:'earth.png',
     episodes:['The Avatar State','The Cave of Two Lovers','Return to Omashu','The Swamp','Avatar Day','The Blind Bandit','Zuko Alone','The Chase','Bitter Work','The Library','The Desert',"The Serpent's Pass",'The Drill','City of Walls and Secrets','The Tales of Ba Sing Se',"Appa's Lost Days",'Lake Laogai','The Earth King','The Guru','The Crossroads of Destiny'] },
-  { book:3, tag:'atla-book3', label:'Book Three', sublabel:'Fire', symFile:'fire.png',
+  { book:3, tag:'season3', label:'Book Three', sublabel:'Fire', symFile:'fire.png',
     episodes:['The Awakening','The Headband','The Painted Lady',"Sokka's Master",'The Beach','The Avatar and the Firelord','The Runaway','The Puppetmaster','Nightmares and Daydreams','The Day of Black Sun, Part 1','The Day of Black Sun, Part 2','The Western Air Temple','The Firebending Masters','The Boiling Rock, Part 1','The Boiling Rock, Part 2','The Southern Raiders','The Ember Island Players',"Sozin's Comet, Part 1: The Phoenix King","Sozin's Comet, Part 2: The Old Masters","Sozin's Comet, Part 3: Into the Inferno","Sozin's Comet, Part 4: Avatar Aang"] }
 ];
 
-function epUrl(b,n){ return `${GH}/${BOOKS[b-1].tag}/s${b}e${String(n).padStart(2,'0')}.mkv`; }
+function epUrl(b,n){ return `${GH}/${BOOKS[b-1].tag}/S${b}E${n}.mkv`; }
 function subUrl(b,n){ return `s${b}e${String(n).padStart(2,'0')}.srt`; }
 function getNext(b,n){ const bd=BOOKS[b-1]; if(n<bd.episodes.length) return{book:b,num:n+1,title:bd.episodes[n]}; if(b<3) return{book:b+1,num:1,title:BOOKS[b].episodes[0]}; return null; }
 
