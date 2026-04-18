@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -70,7 +70,7 @@
     /* ─── Background ─── */
     .bg-layer {
       position: fixed; inset: 0;
-      background-image: url('moviebackground.png');
+      background-image: url('moviebg.png');
       background-size: cover;
       background-position: center top;
       filter: blur(8px) brightness(0.22) saturate(1.4);
@@ -154,7 +154,7 @@
 
     header {
       padding: 1.4rem 4rem;
-      display: flex; align-items: center; justify-content: flex-end; gap: 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
       border-bottom: 1px solid var(--border);
     }
     .header-tag {
@@ -613,7 +613,7 @@
     }
 
     /* ─── Speed selector ─── */
-    .speed-wrap { display: flex; align-items: center; }
+    .speed-wrap { display: flex; align-items: center; position: relative; }
     .speed-btn {
       background: none; border: none; cursor: pointer;
       font-family: 'Cinzel', serif; font-size: 0.5rem;
@@ -625,6 +625,21 @@
     }
     .speed-btn:hover { color: var(--white); border-color: rgba(255,255,255,0.25); }
     .speed-btn.active { color: var(--blue); border-color: var(--blue); }
+    .speed-menu {
+      position: absolute; bottom: calc(100% + 10px); right: 0;
+      background: rgba(6,10,20,0.97); border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 12px; padding: 5px; display: none; flex-direction: column;
+      min-width: 72px; backdrop-filter: blur(24px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6); z-index: 50;
+    }
+    .speed-menu.open { display: flex; }
+    .speed-opt {
+      font-family: 'Cinzel', serif; font-size: 0.48rem; letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.55); padding: 0.45em 0.8em; border-radius: 7px;
+      cursor: pointer; text-align: center; transition: background 0.15s, color 0.15s;
+    }
+    .speed-opt:hover { background: rgba(255,255,255,0.08); color: var(--white); }
+    .speed-opt.active { color: var(--blue); background: rgba(77,184,255,0.08); }
 
     /* ─── OSD toast (keyboard shortcut feedback) ─── */
     @keyframes osdIn  { from { opacity:0; transform:translate(-50%,-50%) scale(0.85); } to { opacity:1; transform:translate(-50%,-50%) scale(1); } }
@@ -754,6 +769,12 @@
 
 <div class="page">
   <header class="anim-header">
+    <!-- Hub button — top left -->
+    <a href="index.html" style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);text-decoration:none;border:1px solid var(--dim);padding:.4em 1.4em;border-radius:30px;background:transparent;display:flex;align-items:center;gap:.5em;transition:color .2s,border-color .2s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='rgba(201,168,76,.4)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--dim)'">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:11px;height:11px;flex-shrink:0"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      Hub
+    </a>
+    <!-- Countdown — centered -->
     <div class="header-countdown anim-countdown" id="headerCountdown">
       <span class="hcd-label">Streaming in</span>
       <div class="hcd-timer" id="countdownRow">
@@ -767,16 +788,11 @@
       </div>
       <span class="hcd-platform">Paramount+</span>
     </div>
-    <div style="display:flex;align-items:center;gap:12px;">
-      <a href="index.html" style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);text-decoration:none;border:1px solid var(--dim);padding:.4em 1.4em;border-radius:30px;background:transparent;display:flex;align-items:center;gap:.5em;transition:color .2s,border-color .2s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='rgba(201,168,76,.4)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--dim)'">
-        <svg viewBox="0 0 24 24" fill="currentColor" style="width:11px;height:11px;flex-shrink:0"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        Hub
-      </a>
-      <a href="episodes.html" style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blue);text-decoration:none;border:1px solid rgba(77,184,255,.4);padding:.4em 1.4em;border-radius:30px;background:rgba(77,184,255,.06);display:flex;align-items:center;gap:.5em;transition:color .2s,border-color .2s,background .2s;" onmouseover="this.style.background='rgba(77,184,255,.14)';this.style.borderColor='rgba(77,184,255,.7)';this.style.color='#fff'" onmouseout="this.style.background='rgba(77,184,255,.06)';this.style.borderColor='rgba(77,184,255,.4)';this.style.color='var(--blue)'">
-        <svg viewBox="0 0 24 24" fill="currentColor" style="width:11px;height:11px;flex-shrink:0"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
-        Watch Episodes
-      </a>
-    </div>
+    <!-- Watch ATLA button — top right -->
+    <a href="atla.html" style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blue);text-decoration:none;border:1px solid rgba(77,184,255,.4);padding:.4em 1.4em;border-radius:30px;background:rgba(77,184,255,.06);display:flex;align-items:center;gap:.5em;transition:color .2s,border-color .2s,background .2s;" onmouseover="this.style.background='rgba(77,184,255,.14)';this.style.borderColor='rgba(77,184,255,.7)';this.style.color='#fff'" onmouseout="this.style.background='rgba(77,184,255,.06)';this.style.borderColor='rgba(77,184,255,.4)';this.style.color='var(--blue)'">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:11px;height:11px;flex-shrink:0"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
+      Watch ATLA
+    </a>
   </header>
 
   <section class="hero">
@@ -842,6 +858,15 @@
             <button class="cbtn" id="ccBtn" aria-label="Toggle captions">CC</button>
             <div class="speed-wrap">
               <button class="speed-btn active" id="speedBtn" aria-label="Playback speed">1×</button>
+              <div class="speed-menu" id="speedMenu">
+                <div class="speed-opt" data-s="0.25">0.25×</div>
+                <div class="speed-opt" data-s="0.5">0.5×</div>
+                <div class="speed-opt" data-s="0.75">0.75×</div>
+                <div class="speed-opt active" data-s="1">1×</div>
+                <div class="speed-opt" data-s="1.25">1.25×</div>
+                <div class="speed-opt" data-s="1.5">1.5×</div>
+                <div class="speed-opt" data-s="2">2×</div>
+              </div>
             </div>
             <button class="cbtn" id="fsBtn" aria-label="Toggle fullscreen">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
@@ -1126,23 +1151,28 @@ function showOSD(msg) {
   }, 700);
 }
 
-/* ── Speed control ── */
-const SPEEDS    = [0.75, 1, 1.25, 1.5, 2];
+/* ── Speed control popup ── */
+const SPEEDS    = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2];
 const speedBtn  = document.getElementById('speedBtn');
-let speedIdx    = 1; // default 1×
-
-function setSpeed(idx) {
-  speedIdx = idx;
-  const s = SPEEDS[speedIdx];
+const speedMenu = document.getElementById('speedMenu');
+let currentSpeed = 1;
+function setSpeed(s) {
+  currentSpeed = s;
   vid.playbackRate = s;
   speedBtn.textContent = s === 1 ? '1×' : s + '×';
   speedBtn.classList.toggle('active', s !== 1);
+  speedMenu.querySelectorAll('.speed-opt').forEach(o => o.classList.toggle('active', parseFloat(o.dataset.s) === s));
 }
-
-speedBtn.addEventListener('click', () => {
-  setSpeed((speedIdx + 1) % SPEEDS.length);
-  showOSD(SPEEDS[speedIdx] + '×');
+speedBtn.addEventListener('click', e => { e.stopPropagation(); speedMenu.classList.toggle('open'); });
+speedMenu.querySelectorAll('.speed-opt').forEach(opt => {
+  opt.addEventListener('click', e => {
+    e.stopPropagation();
+    setSpeed(parseFloat(opt.dataset.s));
+    speedMenu.classList.remove('open');
+    showOSD(parseFloat(opt.dataset.s) + '×');
+  });
 });
+document.addEventListener('click', () => speedMenu.classList.remove('open'));
 
 /* ── Keyboard shortcuts ── */
 document.addEventListener('keydown', e => {
@@ -1156,12 +1186,12 @@ document.addEventListener('keydown', e => {
     case 'ArrowRight':
       e.preventDefault();
       if (isFinite(vid.duration)) vid.currentTime = Math.min(vid.duration, vid.currentTime + 5);
-      showOSD('⏩ +5s');
+      showOSD('+5s');
       break;
     case 'ArrowLeft':
       e.preventDefault();
       vid.currentTime = Math.max(0, vid.currentTime - 5);
-      showOSD('⏪ −5s');
+      showOSD('−5s');
       break;
     case 'ArrowUp':
       e.preventDefault();
