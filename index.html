@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Avatar Hub</title>
-  <link rel="icon" type="image/jpeg" href="favicon.png">
+  <link rel="icon" type="image/jpeg" href="images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Cinzel+Decorative:wght@400;700;900&family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <style>
@@ -49,7 +49,7 @@
     /* ── Background ── */
     .bg-layer {
       position: fixed; inset: 0;
-      background-image: url('mainbg.png');
+      background-image: url('images/mainbg.png');
       background-size: cover; background-position: center top;
       filter: blur(8px) brightness(0.2) saturate(1.4);
       transform: scale(1.04); z-index: 0;
@@ -191,13 +191,7 @@
       position: absolute; inset: 0;
       background: linear-gradient(to bottom,transparent 35%,rgba(4,7,13,.92) 100%);
     }
-    .card-sym {
-      position: relative; z-index: 2;
-      width: clamp(44px,6vw,66px); height: clamp(44px,6vw,66px); object-fit: contain;
-    }
-    .hub-card.atla  .card-sym { animation:pulseGlowWater 2.6s ease-in-out infinite .2s; }
-    .hub-card.korra .card-sym { animation:pulseGlowEarth 2.6s ease-in-out infinite .7s; }
-    .hub-card.movie .card-sym { animation:pulseGlowAir   2.6s ease-in-out infinite 1.1s; }
+
 
     /* Body */
     .card-body {
@@ -299,9 +293,8 @@
     <!-- ATLA -->
     <a href="atla.html" class="hub-card atla">
       <div class="card-poster">
-        <div class="card-poster-bg" style="background-image:url('atlabg.png')"></div>
+        <div class="card-poster-bg" style="background-image:url('images/atlabg.png')"></div>
         <div class="card-poster-overlay"></div>
-        <img src="https://raw.githubusercontent.com/JeffreyHamilton6399/Legend-of-Aang-The-Last-Airbender/main/water.png" alt="" class="card-sym">
       </div>
       <div class="card-body">
         <span class="card-label">Original Series</span>
@@ -320,12 +313,33 @@
       </div>
     </a>
 
+    <!-- Movie -->
+    <a href="movie.html" class="hub-card movie">
+      <div class="card-poster">
+        <div class="card-poster-bg" style="background-image:url('images/moviebg.png')"></div>
+        <div class="card-poster-overlay"></div>
+      </div>
+      <div class="card-body">
+        <span class="card-label">Animated Film · 2026</span>
+        <div class="card-title">Aang, The Last Airbender</div>
+        <div class="card-sub">Avatar: The Movie</div>
+        <div class="card-meta">
+          <span class="card-tag">Avatar Studios</span>
+          <span class="card-tag">Paramount+</span>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-cta">
+          Watch Now
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+    </a>
+
     <!-- Korra -->
     <a href="kora.html" class="hub-card korra">
       <div class="card-poster">
-        <div class="card-poster-bg" style="background-image:url('korabg.png')"></div>
+        <div class="card-poster-bg" style="background-image:url('images/korabg.png')"></div>
         <div class="card-poster-overlay"></div>
-        <img src="https://raw.githubusercontent.com/JeffreyHamilton6399/Legend-of-Aang-The-Last-Airbender/main/earth.png" alt="" class="card-sym">
       </div>
       <div class="card-body">
         <span class="card-label">Sequel Series</span>
@@ -344,28 +358,7 @@
       </div>
     </a>
 
-    <!-- Movie -->
-    <a href="movie.html" class="hub-card movie">
-      <div class="card-poster">
-        <div class="card-poster-bg" style="background-image:url('moviebg.png')"></div>
-        <div class="card-poster-overlay"></div>
-        <img src="https://raw.githubusercontent.com/JeffreyHamilton6399/Legend-of-Aang-The-Last-Airbender/main/air.png" alt="" class="card-sym">
-      </div>
-      <div class="card-body">
-        <span class="card-label">Animated Film · 2026</span>
-        <div class="card-title">Aang, The Last Airbender</div>
-        <div class="card-sub">Avatar: The Movie</div>
-        <div class="card-meta">
-          <span class="card-tag">Avatar Studios</span>
-          <span class="card-tag">Paramount+</span>
-        </div>
-        <div class="card-divider"></div>
-        <div class="card-cta">
-          Watch Now
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-        </div>
-      </div>
-    </a>
+
 
   </div>
 </div>
