@@ -16,7 +16,7 @@
     }
     @keyframes slideUp    {from{opacity:0;transform:translateY(36px)}to{opacity:1;transform:translateY(0)}}
     @keyframes overlayOut {from{opacity:1}to{opacity:0}}
-    @keyframes spin       {to{transform:translate(-50%,-50%) rotate(360deg)}}
+
     @keyframes shimmer    {0%{background-position:-220% center;opacity:0}4%{opacity:1}30%{background-position:220% center;opacity:1}34%{opacity:0}100%{background-position:220% center;opacity:0}}
     @keyframes framePulse {0%,100%{box-shadow:0 0 0 1px rgba(201,168,76,.18),0 0 40px rgba(201,168,76,.13),0 0 80px rgba(201,168,76,.06),inset 0 1px 0 rgba(255,240,180,.18)}15%,34%{box-shadow:0 0 0 2px rgba(255,220,100,.65),0 0 55px rgba(201,168,76,.45),0 0 110px rgba(201,168,76,.22),inset 0 1px 0 rgba(255,240,180,.35)}}
     @keyframes pulseGlowAir   {0%,100%{filter:drop-shadow(0 0 4px #f5c518)}50%{filter:drop-shadow(0 0 14px #f5c518)}}
@@ -32,7 +32,7 @@
     @keyframes nextSlide  {from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
     body{background:var(--deep);color:var(--white);font-family:'Philosopher',Georgia,serif;min-height:100vh;overflow-x:hidden;}
-    .bg-layer{position:fixed;inset:0;background-image:url('https://raw.githubusercontent.com/JeffreyHamilton6399/Legend-of-Aang-The-Last-Airbender/main/background.png');background-size:cover;background-position:center top;filter:blur(8px) brightness(.22) saturate(1.4);transform:scale(1.04);z-index:0;}
+    .bg-layer{position:fixed;inset:0;background-image:url('https://raw.githubusercontent.com/JeffreyHamilton6399/Legend-of-Aang-The-Last-Airbender/main/backgroundATLA.png');background-size:cover;background-position:center top;filter:blur(8px) brightness(.22) saturate(1.4);transform:scale(1.04);z-index:0;}
     .bg-layer::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(4,7,13,.55) 0%,transparent 35%,transparent 65%,rgba(4,7,13,.7) 100%);}
 
     /* Intro overlay */
@@ -103,7 +103,11 @@
     .big-play svg{width:28px;height:28px;fill:var(--white);margin-left:4px;}
     .big-play.hidden{opacity:0;transform:translate(-50%,-50%) scale(.9);}
     .click-area{position:absolute;inset:0;z-index:11;cursor:pointer;}
-    #bufferSpinner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:48px;height:48px;border:3px solid rgba(255,255,255,.12);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;z-index:15;display:none;pointer-events:none;}
+    #bufferSpinner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;z-index:15;display:none;pointer-events:none;}
+    #bufferSpinner::before{content:'';position:absolute;inset:0;border-radius:50%;border:2.5px solid transparent;border-top-color:var(--water);border-right-color:var(--earth);animation:spinRing 1.1s cubic-bezier(.4,0,.6,1) infinite;}
+    #bufferSpinner::after{content:'';position:absolute;inset:7px;border-radius:50%;border:2px solid transparent;border-bottom-color:var(--fire);border-left-color:var(--air);animation:spinRingReverse .8s cubic-bezier(.4,0,.6,1) infinite;}
+    @keyframes spinRing{to{transform:translate(-50%,-50%) rotate(360deg);}}
+    @keyframes spinRingReverse{to{transform:translate(-50%,-50%) rotate(-360deg);}}
 
     /* Captions */
     #captionBox{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);z-index:19;text-align:center;pointer-events:none;width:max-content;max-width:75%;display:none;opacity:0;transition:opacity .2s;}
@@ -145,6 +149,26 @@
 
     /* Controls */
     .controls{position:absolute;bottom:24px;left:24px;right:24px;z-index:20;background:rgba(10,15,25,.65);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 24px;transition:all .4s ease;}
+    @media(max-width:768px){
+      .controls{bottom:12px;left:12px;right:12px;padding:10px 14px;}
+      .ctrls-row{flex-wrap:wrap;gap:6px;}
+      .vol-wrap{order:10;width:100%;justify-content:flex-start;padding-top:4px;border-top:1px solid rgba(255,255,255,.06);}
+      .vol-slider{width:100px;}
+      .speed-wrap{order:11;margin-left:auto;}
+      .time-disp{font-size:.6rem;}
+      header{padding:1rem 1.2rem;}
+    }
+    /* Speed button */
+    .speed-wrap{display:flex;align-items:center;}
+    .speed-btn{background:none;border:none;cursor:pointer;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.06em;color:rgba(255,255,255,.6);padding:.3em .55em;border-radius:4px;border:1px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap;}
+    .speed-btn:hover{color:var(--white);border-color:rgba(255,255,255,.25);}
+    .speed-btn.active{color:var(--blue);border-color:var(--blue);}
+    /* OSD toast */
+    @keyframes osdIn{from{opacity:0;transform:translate(-50%,-50%) scale(.85);}to{opacity:1;transform:translate(-50%,-50%) scale(1);}}
+    @keyframes osdOut{from{opacity:1;}to{opacity:0;}}
+    #osdToast{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,15,28,.72);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:.7em 1.3em;font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--white);pointer-events:none;z-index:25;opacity:0;}
+    #osdToast.show{animation:osdIn .18s ease forwards;}
+    #osdToast.hide{animation:osdOut .35s ease forwards;}
     .progress{position:relative;height:18px;display:flex;align-items:center;margin-bottom:10px;cursor:pointer;}
     .progress-track{position:absolute;left:0;right:0;height:3px;background:rgba(255,255,255,.1);border-radius:4px;}
     .prog-fill{position:absolute;left:0;top:0;bottom:0;background:var(--blue);border-radius:4px;width:0%;}
@@ -298,12 +322,13 @@
       <div class="corner corner-br"><img src="https://raw.githubusercontent.com/JeffreyHamilton6399/Legend-of-Aang-The-Last-Airbender/main/air.png" alt="" class="corner-img corner-air"></div>
       <div class="player-shell idle" id="playerShell">
         <video id="mainVideo" preload="metadata" playsinline poster="https://raw.githubusercontent.com/JeffreyHamilton6399/Legend-of-Aang-The-Last-Airbender/main/preview.jpg">
-          <source src="" type="video/mp4" id="videoSource">
+          <source src="" type="video/x-matroska" id="videoSource">
         </video>
         <div class="big-play" id="bigPlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         <div id="bufferSpinner"></div>
         <div class="click-area" id="clickArea"></div>
         <div id="captionBox"></div>
+        <div id="osdToast"></div>
         <button id="skipIntroBtn">Skip Intro &nbsp;→</button>
         <div id="nextEpPanel">
           <div class="nep-eyebrow">Up Next</div>
@@ -331,6 +356,7 @@
               <input type="range" id="volSlider" class="vol-slider" min="0" max="1" step="0.02" value="1">
             </div>
             <button class="cbtn" id="ccBtn">CC</button>
+            <div class="speed-wrap"><button class="speed-btn active" id="speedBtn">1×</button></div>
             <button class="cbtn" id="fsBtn">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
             </button>
@@ -506,7 +532,7 @@ const BOOKS = [
     episodes:['The Awakening','The Headband','The Painted Lady',"Sokka's Master",'The Beach','The Avatar and the Firelord','The Runaway','The Puppetmaster','Nightmares and Daydreams','The Day of Black Sun, Part 1','The Day of Black Sun, Part 2','The Western Air Temple','The Firebending Masters','The Boiling Rock, Part 1','The Boiling Rock, Part 2','The Southern Raiders','The Ember Island Players',"Sozin's Comet, Part 1: The Phoenix King","Sozin's Comet, Part 2: The Old Masters","Sozin's Comet, Part 3: Into the Inferno","Sozin's Comet, Part 4: Avatar Aang"] }
 ];
 
-function epUrl(b,n){ return `${GH}/${BOOKS[b-1].tag}/s${b}e${String(n).padStart(2,'0')}.mp4`; }
+function epUrl(b,n){ return `${GH}/${BOOKS[b-1].tag}/s${b}e${String(n).padStart(2,'0')}.mkv`; }
 function subUrl(b,n){ return `s${b}e${String(n).padStart(2,'0')}.srt`; }
 function getNext(b,n){ const bd=BOOKS[b-1]; if(n<bd.episodes.length) return{book:b,num:n+1,title:bd.episodes[n]}; if(b<3) return{book:b+1,num:1,title:BOOKS[b].episodes[0]}; return null; }
 
@@ -525,9 +551,25 @@ const vid=document.getElementById('mainVideo'),shell=document.getElementById('pl
 let idleTimer;
 function resetIdle(){ shell.classList.remove('idle'); clearTimeout(idleTimer); if(!vid.paused) idleTimer=setTimeout(()=>shell.classList.add('idle'),1250); }
 document.addEventListener('mousemove',resetIdle); document.addEventListener('keydown',resetIdle);
-document.addEventListener('keydown',e=>{ if(e.target.tagName==='INPUT')return; switch(e.code){ case'Space':case'KeyK':e.preventDefault();togglePlay();break;case'ArrowRight':e.preventDefault();if(isFinite(vid.duration))vid.currentTime=Math.min(vid.duration,vid.currentTime+5);break;case'ArrowLeft':e.preventDefault();vid.currentTime=Math.max(0,vid.currentTime-5);break;case'ArrowUp':e.preventDefault();vid.volume=Math.min(1,vid.volume+.1);vid.muted=false;volSlider.value=vid.volume;updateVolUI();break;case'ArrowDown':e.preventDefault();vid.volume=Math.max(0,vid.volume-.1);vid.muted=vid.volume===0;volSlider.value=vid.volume;updateVolUI();break;case'KeyM':vid.muted=!vid.muted;volSlider.value=vid.muted?0:(vid.volume||1);updateVolUI();break;case'KeyF':e.preventDefault();toggleFullscreen();break;} });
+document.addEventListener('keydown',e=>{ if(e.target.tagName==='INPUT')return; switch(e.code){ case'Space':case'KeyK':e.preventDefault();togglePlay();showOSD(vid.paused?'▶':'⏸');break;case'ArrowRight':e.preventDefault();if(isFinite(vid.duration))vid.currentTime=Math.min(vid.duration,vid.currentTime+5);showOSD('⏩ +5s');break;case'ArrowLeft':e.preventDefault();vid.currentTime=Math.max(0,vid.currentTime-5);showOSD('⏪ −5s');break;case'ArrowUp':e.preventDefault();vid.volume=Math.min(1,vid.volume+.1);vid.muted=false;volSlider.value=vid.volume;updateVolUI();showOSD('🔊 '+Math.round(vid.volume*100)+'%');break;case'ArrowDown':e.preventDefault();vid.volume=Math.max(0,vid.volume-.1);vid.muted=vid.volume===0;volSlider.value=vid.volume;updateVolUI();showOSD('🔉 '+Math.round(vid.volume*100)+'%');break;case'KeyM':vid.muted=!vid.muted;volSlider.value=vid.muted?0:(vid.volume||1);updateVolUI();showOSD(vid.muted?'🔇 Muted':'🔊 Unmuted');break;case'KeyF':e.preventDefault();toggleFullscreen();showOSD(document.fullscreenElement?'⤡ Exit':'⤢ Fullscreen');break;} });
 let tapTimer=null;
-clickArea.addEventListener('touchend',e=>{ e.preventDefault();resetIdle(); if(tapTimer){clearTimeout(tapTimer);tapTimer=null;togglePlay();}else{tapTimer=setTimeout(()=>{tapTimer=null;},300);} },{passive:false});
+clickArea.addEventListener('touchend',e=>{ e.preventDefault();resetIdle();
+  // Single tap = play/pause on touch devices; double-tap on pointer devices
+  if(window.matchMedia('(pointer: coarse)').matches){ togglePlay(); }
+  else { if(tapTimer){clearTimeout(tapTimer);tapTimer=null;togglePlay();}else{tapTimer=setTimeout(()=>{tapTimer=null;},300);} }
+},{passive:false});
+
+/* OSD toast */
+const osdToast=document.getElementById('osdToast');
+let osdTimer=null;
+function showOSD(msg){osdToast.textContent=msg;osdToast.classList.remove('hide');osdToast.classList.add('show');clearTimeout(osdTimer);osdTimer=setTimeout(()=>{osdToast.classList.remove('show');osdToast.classList.add('hide');},700);}
+
+/* Speed control */
+const SPEEDS=[0.75,1,1.25,1.5,2];
+const speedBtn=document.getElementById('speedBtn');
+let speedIdx=1;
+function setSpeed(i){speedIdx=i;const s=SPEEDS[speedIdx];vid.playbackRate=s;speedBtn.textContent=s===1?'1×':s+'×';speedBtn.classList.toggle('active',s!==1);}
+speedBtn.addEventListener('click',()=>{setSpeed((speedIdx+1)%SPEEDS.length);showOSD(SPEEDS[speedIdx]+'×');});
 function fmt(s){s=Math.floor(s||0);const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return h>0?`${h}:${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`:`${m}:${String(sc).padStart(2,'0')}`;}
 function togglePlay(){ vid.paused?vid.play():vid.pause(); }
 function toggleFullscreen(){ document.fullscreenElement?document.exitFullscreen():shell.requestFullscreen().catch(()=>{}); }
